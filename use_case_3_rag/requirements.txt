@@ -1,0 +1,40 @@
+# PDF parsing
+pdfplumber==0.10.4
+pymupdf==1.24.0
+
+# Embeddings
+sentence-transformers==2.7.0
+torch>=2.0.0
+
+# Vector store
+faiss-cpu==1.8.0
+numpy==1.26.4
+
+# Graph store
+networkx==3.3
+neo4j==5.20.0    # optional: for production Neo4j; code falls back to NetworkX
+
+# Keyword search
+rank-bm25==0.2.2
+nltk==3.8.1
+
+# Reranking
+flashrank==0.2.9
+
+# LLM / Generation
+anthropic==0.34.0
+python-dotenv==1.0.1
+
+# Backend API
+fastapi==0.111.0
+uvicorn==0.30.1
+pydantic==2.7.4
+
+# Frontend
+streamlit==1.35.0
+streamlit-chat==0.1.1
+
+# Utilities
+tqdm==4.66.1
+loguru==0.7.2
+tenacity==8.3.0

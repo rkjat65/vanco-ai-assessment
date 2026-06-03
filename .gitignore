@@ -1,0 +1,43 @@
+# Data files - too large for git
+use_case_1_forecasting/data/
+use_case_1_forecasting/outputs/*.csv
+
+# Model weights - too large
+use_case_2_asl/runs/
+use_case_2_asl/data/images/
+use_case_2_asl/data/labels/
+use_case_2_asl/demo_screenshots/
+
+# RAG indexes - generated files
+use_case_3_rag/indexes/
+
+# Secrets
+use_case_3_rag/.env
+*.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Logs
+*.log
