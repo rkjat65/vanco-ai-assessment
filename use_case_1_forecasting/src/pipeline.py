@@ -60,8 +60,8 @@ def run_pipeline(data_dir: str, output_dir: str):
         tr = tr.dropna(subset=feature_cols + [target_col])
         val = val.dropna(subset=feature_cols + [target_col])
 
-        print(f"\n  Fold {fold.fold_id}: train {fold.train_start.date()}→{fold.train_end.date()} | "
-              f"val {fold.val_start.date()}→{fold.val_end.date()} "
+        print(f"\n  Fold {fold.fold_id}: train {fold.train_start.date()} to {fold.train_end.date()} | "
+              f"val {fold.val_start.date()} to {fold.val_end.date()} "
               f"({len(tr):,} / {len(val):,} rows)")
 
         lgbm_model = train_lgbm(
