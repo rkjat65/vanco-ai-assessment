@@ -8,8 +8,8 @@ use_case_2_asl/data/images/
 use_case_2_asl/data/labels/
 use_case_2_asl/demo_screenshots/
 
-# RAG indexes - generated files
-use_case_3_rag/indexes/
+# RAG indexes - keep in repo (small enough at ~8MB total)
+# use_case_3_rag/indexes/
 
 # Secrets
 use_case_3_rag/.env
