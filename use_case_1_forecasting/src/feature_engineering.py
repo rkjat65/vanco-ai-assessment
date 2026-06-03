@@ -129,23 +129,27 @@ def add_holiday_features(df: pd.DataFrame) -> pd.DataFrame:
     df["is_national_holiday"] = df["is_national"].astype("int8")
     df["is_transferred"] = df["transferred"].astype("int8")
 
-    # Days until/since nearest holiday (adds temporal proximity signal)
+    # Days until/since nearest holiday — O(n log m) with searchsorted
     holiday_dates = df[df["is_holiday"] == 1]["date"].sort_values().unique()
     if len(holiday_dates) > 0:
-        df["days_to_holiday"] = df["date"].apply(
-            lambda d: min(
-                [(hd - d).days for hd in holiday_dates if (hd - d).days >= 0],
-                default=99,
-            )
+        dates_d     = df["date"].values.astype("datetime64[D]")
+        holidays_d  = holiday_dates.astype("datetime64[D]")
+        # searchsorted gives index of first holiday >= each date
+        idx_next = np.searchsorted(holidays_d, dates_d, side="left")
+        idx_prev = idx_next - 1
+
+        days_to = np.where(
+            idx_next < len(holidays_d),
+            (holidays_d[np.minimum(idx_next, len(holidays_d)-1)] - dates_d).astype("int64"),
+            99
         )
-        df["days_since_holiday"] = df["date"].apply(
-            lambda d: min(
-                [(d - hd).days for hd in holiday_dates if (d - hd).days >= 0],
-                default=99,
-            )
+        days_since = np.where(
+            idx_prev >= 0,
+            (dates_d - holidays_d[np.maximum(idx_prev, 0)]).astype("int64"),
+            99
         )
-        df["days_to_holiday"] = df["days_to_holiday"].clip(0, 30).astype("int8")
-        df["days_since_holiday"] = df["days_since_holiday"].clip(0, 30).astype("int8")
+        df["days_to_holiday"]    = np.clip(days_to,    0, 30).astype("int8")
+        df["days_since_holiday"] = np.clip(days_since, 0, 30).astype("int8")
 
     return df
 
