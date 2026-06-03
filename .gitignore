@@ -1,6 +1,6 @@
 # Data files - too large for git
 use_case_1_forecasting/data/
-use_case_1_forecasting/outputs/*.csv
+# use_case_1_forecasting/outputs/*.csv  # keep submission in repo
 
 # Model weights - too large
 use_case_2_asl/runs/
