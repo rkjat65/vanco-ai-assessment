@@ -86,9 +86,9 @@ def build_master_frame(tables: dict[str, pd.DataFrame]) -> tuple[pd.DataFrame, p
         df = df.merge(holidays_agg, on="date", how="left")
         df = df.merge(transactions, on=["date", "store_nbr"], how="left")
 
-        df["is_holiday"] = df["is_holiday"].fillna(0).astype("int8")
-        df["transferred"] = df["transferred"].fillna(False).infer_objects(copy=False).astype("int8")
-        df["is_national"] = df["is_national"].fillna(False).infer_objects(copy=False).astype("int8")
+        df["is_holiday"]  = df["is_holiday"].fillna(0).astype("int8")
+        df["transferred"] = df["transferred"].fillna(0).astype("int8")
+        df["is_national"] = df["is_national"].fillna(0).astype("int8")
         df["holiday_type"] = df["holiday_type"].fillna("None")
         df["holiday_locale"] = df["holiday_locale"].fillna("None")
 

@@ -205,9 +205,9 @@ def build_features(df: pd.DataFrame, is_train: bool = True) -> pd.DataFrame:
 
     df = add_store_family_encodings(df)
 
-    # Drop columns not needed for modeling
+    # Drop columns not needed for modeling (keep 'date' — needed for validation splitting)
     drop_cols = [
-        "date", "id", "holiday_type", "holiday_locale",
+        "id", "holiday_type", "holiday_locale",
         "city", "state",  # already encoded above
     ]
     df = df.drop(columns=[c for c in drop_cols if c in df.columns])
