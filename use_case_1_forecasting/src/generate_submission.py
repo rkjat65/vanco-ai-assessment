@@ -55,14 +55,22 @@ ens_val  = np.clip(0.6 * lgbm_val + 0.4 * xgb_val, 0, None)
 evaluate_predictions(final_val["sales"].values, ens_val, label="Final ensemble (val)")
 
 print("[4/4] Generating submission...")
-test_clean   = test_df.dropna(subset=feature_cols)
-lgbm_test    = np.expm1(final_lgbm.predict(test_clean[feature_cols]))
-xgb_test     = np.expm1(final_xgb.predict(xgb.DMatrix(test_clean[feature_cols])))
+# Fill NaN features in test set (transactions/lags unavailable for future dates)
+# Use median imputation — conservative, avoids zeroing out important features
+test_pred = test_df.copy()
+for col in feature_cols:
+    if col in test_pred.columns and test_pred[col].isna().any():
+        fill_val = train_clean[col].median() if col in train_clean.columns else 0
+        test_pred[col] = test_pred[col].fillna(fill_val)
+
+print(f"  Test rows: {len(test_pred):,}")
+lgbm_test    = np.expm1(final_lgbm.predict(test_pred[feature_cols]))
+xgb_test     = np.expm1(final_xgb.predict(xgb.DMatrix(test_pred[feature_cols])))
 ensemble_test = np.clip(0.6 * lgbm_test + 0.4 * xgb_test, 0, None)
 
 # Align with sample_submission IDs
 sample_sub = pd.read_csv("../data/sample_submission.csv")
-pred_map   = dict(zip(test_clean["id"].astype(int), ensemble_test))
+pred_map   = dict(zip(test_pred["id"].astype(int), ensemble_test))
 sample_sub["sales"] = sample_sub["id"].map(pred_map).fillna(0)
 
 out_path = f"{OUTPUT_DIR}/submission.csv"

@@ -127,7 +127,12 @@ def run_pipeline(data_dir: str, output_dir: str):
 
     # ── 6. Generate submission ───────────────────────────────────────────────
     print("\n[6/6] Generating submission file...")
-    test_clean = test_df.dropna(subset=feature_cols)
+    # Fill NaN features (transactions/lags are unavailable for future test dates)
+    test_clean = test_df.copy()
+    for col in feature_cols:
+        if col in test_clean.columns and test_clean[col].isna().any():
+            fill_val = train_clean[col].median() if col in train_clean.columns else 0
+            test_clean[col] = test_clean[col].fillna(fill_val)
 
     import xgboost as xgboost_lib
     lgbm_test = np.expm1(final_lgbm.predict(test_clean[feature_cols]))
