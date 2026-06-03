@@ -14,10 +14,11 @@ Why Claude over GPT-4 or open-source models:
 """
 
 import os
+from pathlib import Path
 from typing import Optional
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(dotenv_path=Path(__file__).parent.parent / ".env", override=True)
 
 try:
     import anthropic
@@ -72,9 +73,14 @@ def build_prompt(question: str, chunks: list[dict]) -> str:
 
 class AnswerGenerator:
     def __init__(self, model: str = MODEL):
-        api_key = os.getenv("ANTHROPIC_API_KEY")
-        if not api_key:
+        # Load from .env, overriding empty Claude Code env vars
+        from dotenv import dotenv_values
+        env_vals = dotenv_values(Path(__file__).parent.parent / ".env")
+        api_key = env_vals.get("ANTHROPIC_API_KEY", "").strip()
+        if not api_key or api_key == "your_key_here":
             raise ValueError("ANTHROPIC_API_KEY not set in .env")
+        # Clear conflicting env vars that Claude Code sets to empty strings
+        os.environ.pop("ANTHROPIC_AUTH_TOKEN", None)
         self.client = anthropic.Anthropic(api_key=api_key)
         self.model = model
 

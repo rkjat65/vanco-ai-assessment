@@ -29,7 +29,8 @@ def load_pipeline():
     from retrieval.hybrid_retriever import HybridRetriever
     from generation.answer_generator import AnswerGenerator
     from dotenv import load_dotenv
-    load_dotenv()
+    from pathlib import Path
+    load_dotenv(dotenv_path=Path(__file__).parent.parent / ".env")
 
     index_dir = os.getenv("INDEX_DIR", "indexes/")
     retriever = HybridRetriever(index_dir=index_dir)
