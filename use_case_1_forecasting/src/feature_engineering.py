@@ -133,7 +133,7 @@ def add_holiday_features(df: pd.DataFrame) -> pd.DataFrame:
     holiday_dates = df[df["is_holiday"] == 1]["date"].sort_values().unique()
     if len(holiday_dates) > 0:
         dates_d     = df["date"].values.astype("datetime64[D]")
-        holidays_d  = holiday_dates.astype("datetime64[D]")
+        holidays_d  = np.array(holiday_dates, dtype="datetime64[D]")
         # searchsorted gives index of first holiday >= each date
         idx_next = np.searchsorted(holidays_d, dates_d, side="left")
         idx_prev = idx_next - 1
