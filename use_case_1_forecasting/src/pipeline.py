@@ -118,9 +118,12 @@ def run_pipeline(data_dir: str, output_dir: str):
 
     # ── 5. Error analysis ────────────────────────────────────────────────────
     print("\n[5/6] Running error analysis...")
-    if "val_with_preds" in dir():
-        full_error_report(val_with_preds)
-        feature_importance_report(final_lgbm, feature_cols)
+    try:
+        if "val_with_preds" in dir():
+            full_error_report(val_with_preds)
+            feature_importance_report(final_lgbm, feature_cols)
+    except Exception as e:
+        print(f"  Error analysis partial failure (non-fatal): {e}")
 
     # ── 6. Generate submission ───────────────────────────────────────────────
     print("\n[6/6] Generating submission file...")
